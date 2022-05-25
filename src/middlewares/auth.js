@@ -16,7 +16,7 @@ const isAdmin = async (req, res, next) => {
 
         //---- si no tiene token no está autorizado
         if (!token) {
-        return next(setError(404, "Unauthorized"));
+        return next("Unauthorized");
         }
 
         //---- sustituimos de nuestro token el Bearer " " para quedarnos con el token puramente ya que es texto que nos sobra
@@ -60,7 +60,7 @@ const isRegistered = async (req, res, next) => {
 
         //---- si no tiene token no está autorizado
         if (!token) {
-        return next(setError(404, "Unauthorized"));
+        return next("Unauthorized");
         }
 
         //---- sustituimos de nuestro token el Bearer " " para quedarnos con el token puramente ya que es texto que nos sobra

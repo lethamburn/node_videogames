@@ -140,7 +140,7 @@ const patchJuego = async (req, res, next) => {
         const JuegoDB = await Juego.findByIdAndUpdate(id, patchJuegoDB);
 
         //---- Si mi juego anterior (JuegoDB) tenía carátula la buscamos en cloudinary y la eliminamos
-        if (JuegoDB.caratula) {
+        if (req.file) {
             deleteFile(JuegoDB.caratula);            
         }
 

@@ -56,8 +56,8 @@ const loginUser = async (req, res, next) => {
             return next('Usuario no registrado');
         }
 
-        //---- comprobamos que la password del usuario coincide con la que tenemos hasheada en nuestra BBDD
-        if (bcrypt.compareSync(req.body.password, userDB.password)) {
+        //---- comprobamos que la contraseña del usuario coincide con la que tenemos hasheada en nuestra BBDD
+        if (bcrypt.compareSync(req.body.contraseña, userDB.contraseña)) {
 
             //---- Generamos el token para nuestro usuario registrado
             const token = generateSign(userDB._id, userDB.email);
@@ -112,7 +112,7 @@ const getUser = async (req, res, next) => {
         }
 
         //---- al encontrarlo lo retornamos como respuesta como hemos hecho anteriormente
-        return res.status(200).json({ name: userDB.name, email: userDB.email })
+        return res.status(200).json({ name: userDB.nombreUsuario, email: userDB.email })
     } catch (error) {
          //---- Cuando pasa por el catch significa que algo ha fallado en el intento del post y nos devuelve un error.
         return next(error);

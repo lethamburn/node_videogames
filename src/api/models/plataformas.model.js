@@ -10,7 +10,7 @@ const plataformaSchema = new mongoose.Schema({
     logo: { type: String, trim: true, required: true },
     año: { type: Number, trim: true, required: true },
     empresa: { type: String, trim: true, required: true },
-    juegos: { type: mongoose.Schema.Types.ObjectId, ref: 'juegos', trim: true }
+    juegos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'juegos', trim: true }]
 
 }, { timestamps: true, collection: 'plataformas' });
 

@@ -4,6 +4,17 @@ const express = require("express");
 const cors = require("cors");
 //----Importamos morgan para crear un log con las peticiones realizadas en nuestra consola
 const morgan = require("morgan");
+//----Importamos dotenv para poder acceder a las claves de cloudinary en el .env y lo configuramos
+const dotenv = require("dotenv");
+dotenv.config();
+//----Importamos cloudinary para poder configurarlo a nivel global en el servidor
+const cloudinary = require("cloudinary");
+//----Y lo configuramos:
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
+});
 
 //----Importamos la función connect para conectarnos con la base de datos
 const { connect } = require("./src/utils/database");
@@ -17,7 +28,6 @@ const server = express();
 server.use(morgan("dev"));
 
 //----Almacenamos el valor de nuestra variable de entorno PORT, si no accede tendrá el 8000 por defecto:
-//----No hace falta el dotenv porque lo traemos de la función connect.
 const PORT = process.env.PORT || 8000;
 
 //----Con esta función Express transformará los datos a JSON para poder tratarlos
@@ -34,13 +44,13 @@ server.use(
 
 //* ENDPOINTS:
 //----Importamos las rutas de juegos, plataformas y usuarios
-const {JuegosRoutes} = require("./src/api/juegos.routes.js")
-const {PlataformasRoutes} = require("./src/api/plataformas.routes.js");
-const {UserRoutes} = require("./src/api/usuarios.routes.js");
+const  JuegosRoutes  = require("./src/api/routes/juegos.routes");
+const PlataformasRoutes = require("./src/api/routes/plataformas.routes");
+const UserRoutes = require("./src/api/routes/usuarios.routes");
 //----Y las usamos en el servidor:
 server.use("/juegos", JuegosRoutes);
 server.use("/plataformas", PlataformasRoutes);
-server.use("/usuarios", UserRoutes)
+server.use("/usuarios", UserRoutes);
 
 //----Capturamos el error si la ruta no existe
 server.use("*", (req, res, next) => {

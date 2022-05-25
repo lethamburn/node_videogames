@@ -20,15 +20,14 @@ const userSchema = new mongoose.Schema({
 
 
 //---- Antes de que se guarde nuestro esquema "presave", le decimos que nos encripte la contraseña
-userSchema.pre("save", (next) => {
+userSchema.pre("save", function (next) {
 
     //---- cogemos nuestra contraseña y le hacemos hashSync utilizando bcrypt, 10 será el número de veces que se encripta la contraseña antes de la definitiva.
-    this.password = bcrypt.hashSync(this.password, 10);
+        this.contraseña = bcrypt.hashSync(this.contraseña, 10);
+        //---- next para que continue el guardado de mi esquema usuario en la base de datos y no se quede pendiente
+        next();
+    });
 
-    //---- next para que continue el guardado de mi esquema usuario en la base de datos y no se quede pendiente
-    next();
-
-})
 
 //---- creamos el modelo con la colección users y el esquema userSchema
 const User = mongoose.model('users', userSchema);
