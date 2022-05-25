@@ -1,6 +1,8 @@
 //----Importamos mongoose para crear el modelo en la base de datos
 const mongoose = require("mongoose");
 
+
+//? CREACIÓN DEL ESQUEMA
 //----Creamos nuestro esquema de juegos
 //----Con sus campos titulo, desarrolladora, etc.
 const juegosSchema = new mongoose.Schema({
@@ -19,5 +21,7 @@ const juegosSchema = new mongoose.Schema({
 //----Llamamos Juego a nuestro modelo y le decimos que la colección va a ser juegos, y el esquema que vamos a utilizar va a ser juegosSchema creado anteriormente
 const Juego = mongoose.model('juegos', juegosSchema);
 
+
+//* EXPORTAMOS
 //----Exportamos nuestro modelo de Juego
 module.exports = Juego;

@@ -1,6 +1,9 @@
 //---- Traemos al controlador nuestro modelo de juego
 const Juego = require('../models/juegos.model');
 
+//---- traemos nuestra función deleteFile de nuestro middlewares para eliminar los ficheros en cloudinary
+const { deleteFile } = require('../../middlewares/deleteFile');
+
 
 //---- Aquí crearemos nuestro CRUD... create, read, update y delete
 
@@ -109,7 +112,7 @@ const getJuegoByTitulo = async (req, res, next) => {
         
     } catch (error) {
         //---- Cuando pasa por el catch significa que algo ha fallado en el intento del get y nos devuelve un error.
-        return next("La función getJuego ha fallado.")
+        return next("La función getJuego ha fallado.", error)
     }
 
 }
@@ -119,24 +122,92 @@ const getJuegoByTitulo = async (req, res, next) => {
 //---- para modificar un juego vamos a hacer un patch - nuestra función patch será asíncrona puesto que tardará un tiempo en recoger los datos de la base de datos y modificarlos, recogemos como siempre (req, res, next) para la request(peticion), response(respuesta) y next(para seguir);
 
 //---- Crearemos una función para modificar un juego de mi base de datos.
-
-// *BUILDING PRIMIKO
 const patchJuego = async (req, res, next) => {
 
+    //---- hacemos el try catch para intentar patchear el juego y si no lo consigue entrará por el catch
     try {
         
+        //---- recogeremos el id por los parámetros de la request(req), esto se refiere a cuando al endpoint lleva unos parámetros, los recogemos y los utilizamos, en este caso recogemos el parámetro id.
         const { id } = req.params;
 
+        //---- Ahora recogemos con req.body (el body de la request) que tienen que pasar la validación del modelo como en los ejemplos anteriores y cuando lo tengamos lo guardamos en la constante patchJuegoDB ya que va a ser el nuevo juego modificado que querremos que se guarde 
         const patchJuegoDB = new Juego(req.body);
 
+        //---- obligamos a que el _id de nuestro usuario modificado sea el del usuario que queremos modificar para que no haya ningún problema
         patchJuegoDB._id = id;
 
+        //---- Utilizamos el método findByIdAndUpdate de nuestro modelo Juego para indicarle el id del juego que tenemos que actualizar y nuestra actualización
         const JuegoDB = await Juego.findByIdAndUpdate(id, patchJuegoDB);
 
+        //---- Si mi juego anterior (JuegoDB) tenía carátula la buscamos en cloudinary y la eliminamos
+        if (JuegoDB.caratula) {
+            deleteFile(JuegoDB.caratula);            
+        }
 
+        //---- Si le estoy metiendo una nueva foto como fichero, la añadimos al juego modificado
+        if (req.file) {
+            patchJuegoDB.caratula = req.file.path;
+        }
+
+        //---- Si no está JuegoDB significa que no lo hemos encontrado en la base de datos según su id
+        if (!JuegoDB) {
+            return next("Juego no encontrado")
+        }
+
+        //---- mi función retorna una respuesta con status(200) y muestro el new: con mi juego modificado y el old: con el juego anterior
+        return res.status(200).json({ new: patchJuegoDB, old: JuegoDB });
 
     } catch (error) {
+        //---- Cuando pasa por el catch significa que algo ha fallado en el intento del patch y nos devuelve un error.
         return next("Error al modificar un juego", error)
     }
 
+};
+
+
+//! ----DELETE
+//---- para eliminar un juego vamos a hacer un delete - nuestra función delete será asíncrona puesto que tardará un tiempo en recoger los datos de la base de datos y eliminarlos, recogemos como siempre (req, res, next) para la request(peticion), response(respuesta) y next(para seguir);
+
+//---- Crearemos una función para eliminar un juego de mi base de datos.
+const deleteJuego = async (req, res, next) => {
+
+    //---- hacemos el try catch para intentar deletear el juego y si no lo consigue entrará por el catch
+    try {
+        
+        //---- recogeremos el id por los parámetros de la request(req), esto se refiere a cuando al endpoint lleva unos parámetros, los recogemos y los utilizamos, en este caso recogemos el parámetro id.
+        const { id } = req.params;
+
+        //---- Utilizamos el método findByIdAndDelete de nuestro modelo Juego para indicarle el id del juego que tenemos que eliminar
+        const juegoDB = await Juego.findByIdAndDelete(id);
+
+        //---- Si no está JuegoDB significa que no lo hemos encontrado en la base de datos según su id
+        if (!juegoDB) {
+            return next("Juego no encontrado")
+        }
+
+        //---- Si mi juego anterior (JuegoDB) tenía carátula la buscamos en cloudinary y la eliminamos
+        if (juegoDB.caratula) {
+            deleteFile(juegoDB.caratula);
+        }
+
+        //---- mi función retorna una respuesta con status(200) y muestro el juego que acabo de eliminar
+        return res.status(200).json(juegoDB);
+
+    } catch (error) {
+        //---- Cuando pasa por el catch significa que algo ha fallado en el intento del delete y nos devuelve un error.
+        return next("El juego no se puede eliminar", error)
+    }
+
 }
+
+
+//* EXPORTAMOS
+//---- Para finalizar nuestro controlador exportamos todas nuestras funciones
+module.exports = {
+    postJuego,
+    getJuegos,
+    getJuegoById,
+    getJuegoByTitulo,
+    patchJuego,
+    deleteJuego
+  };

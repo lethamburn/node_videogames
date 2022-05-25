@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 //---- Traemos la librería bcrypt para "hashear" o encriptar la contraseña del usuario antes de que se registre
 const bcrypt = require('bcrypt');
 
+
+//? CREACIÓN DEL ESQUEMA
 //---- Creamos nuestro esquema de usuarios
 const userSchema = new mongoose.Schema({
 
@@ -31,5 +33,7 @@ userSchema.pre("save", (next) => {
 //---- creamos el modelo con la colección users y el esquema userSchema
 const User = mongoose.model('users', userSchema);
 
+
+//* EXPORTAMOS
 //---- exportamos el modelo
 module.exports = User;

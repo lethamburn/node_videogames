@@ -1,6 +1,8 @@
 //---- Se requiere mongoose para crear nuestro esquema
 const mongoose = require("mongoose");
 
+
+//? CREACIÓN DEL ESQUEMA
 //---- Creamos el esquema de nuestras plataformas
 const plataformaSchema = new mongoose.Schema({
 
@@ -15,6 +17,8 @@ const plataformaSchema = new mongoose.Schema({
 //---- llamamos Plataforma a nuestro modelo y le indicamos que será de la coleccion plataformas y que el esquema que va a utilizar es plataformaSchema
 const Plataforma = mongoose.model('plataformas', plataformaSchema);
 
+
+//* EXPORTAMOS
 // exportamos nuestro esquema
 module.exports = Plataforma;
 

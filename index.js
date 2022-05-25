@@ -32,7 +32,15 @@ server.use(
   })
 );
 
-//----ENDPOINTS:
+//* ENDPOINTS:
+//----Importamos las rutas de juegos, plataformas y usuarios
+const {JuegosRoutes} = require("./src/api/juegos.routes.js")
+const {PlataformasRoutes} = require("./src/api/plataformas.routes.js");
+const {UserRoutes} = require("./src/api/usuarios.routes.js");
+//----Y las usamos en el servidor:
+server.use("/juegos", JuegosRoutes);
+server.use("/plataformas", PlataformasRoutes);
+server.use("/usuarios", UserRoutes)
 
 //----Capturamos el error si la ruta no existe
 server.use("*", (req, res, next) => {
