@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/lethamburn/node_videogames#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "express": "^4.18.1",
     "mongoose": "^6.3.4"
