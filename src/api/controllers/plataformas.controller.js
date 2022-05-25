@@ -117,16 +117,14 @@ const patchPlataforma = async (req, res, next) => {
     const patchPlataformaDB = new Plataforma(req.body);
     //---- obligamos a que el _id de nuestro usuario modificado sea el del usuario que queremos modificar para que no haya ningún problema
     patchPlataformaDB._id = id;
-    //---- Utilizamos el método findByIdAndUpdate de nuestro modelo Plataforma para indicarle el id del plataforma que tenemos que actualizar y nuestra actualización
-
+    //----Recogemos la plataforma por id para poder rescatar los juegos que tenia antes de realizar el patch
     const foundPlataforma = await Plataforma.findById(id);
-
+    //----Con spread operator mantenemos los juegos que habia antes y los nuevos después en un array. 
     patchPlataformaDB.juegos = [
-      ...patchPlataformaDB.juegos,
-      ...foundPlataforma.juegos,
+        ...patchPlataformaDB.juegos,
+        ...foundPlataforma.juegos,
     ];
-
-    //TODO: HACER QUE AL EJECUTAR EL PATCH NO ELIMINE LOS JUEGOS QUE HABIA
+    //---- Utilizamos el método findByIdAndUpdate de nuestro modelo Plataforma para indicarle el id del plataforma que tenemos que actualizar y nuestra actualización
     const PlataformaDB = await Plataforma.findByIdAndUpdate(
       id,
       patchPlataformaDB
