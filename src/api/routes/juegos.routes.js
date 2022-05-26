@@ -13,7 +13,7 @@ const upload = require('../../middlewares/file');
 //! RUTAS
 //---- Aquí tenemos nuestras rutas, con sus métodos, autenticaciones, su subida a cloudinar y el controlador que acciona esta ruta
 JuegosRoutes.post('/', [isAdmin], upload.single("caratula"), postJuego);
-JuegosRoutes.get('/', [isRegistered], getJuegos);
+JuegosRoutes.get('/', getJuegos);
 JuegosRoutes.get('/:id', [isRegistered], getJuegoById);
 JuegosRoutes.get('/titulo/:titulo', [isRegistered], getJuegoByTitulo);
 JuegosRoutes.patch('/:id', [isAdmin], upload.single("caratula"), patchJuego);
