@@ -39,7 +39,8 @@ const getJuegos = async (req, res, next) => {
   //---- hacemos el try catch para intentar recoger los juegos y si no lo consigue entrará por el catch
   try {
     //---- Si se está solicitando por param el número de page y comprobando que sea un número:
-    if (req.query.page && typeof req.query.page === "number") {
+    //---- Vamos a comprobar que page exista y sea distinto a NaN
+    if (req.query.page && !isNaN(parseInt(req.query.page))) {
       //---- Recogemos el número total de juegos
       const numJuegos = await Juego.countDocuments();
       //---- Recogemos el número de pagina solicitada
@@ -50,6 +51,7 @@ const getJuegos = async (req, res, next) => {
       let numPages =
         numJuegos % limit > 0 ? numJuegos / limit + 1 : numJuegos / limit;
       //---- Si la pagina es mayor que el número de paginas o menor que 1 la página sera por defecto 1.
+      console.log(numPages);
       if (page > numPages || page < 1) {
         page = 1;
       }
