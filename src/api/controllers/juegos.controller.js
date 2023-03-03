@@ -56,7 +56,7 @@ const getJuegos = async (req, res, next) => {
         page = 1;
       }
       //---- Definimos el skip para que inicie en el punto concreto de la colección
-      const skip = (page - 1) * 10;
+      const skip = (page - 1) * limit;
 
       //---- Haremos un .find() en el modelo de Juego que nos recogerá todos los juegos y los guardaremos en allJuegosDB indicandole el skip y el limit definidos
       const allJuegosDB = await Juego.find().skip(skip).limit(limit);
